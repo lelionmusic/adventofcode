@@ -8,10 +8,6 @@ class Claim:
         self.width = int(size[0])
         self.height = int(size[1])
 
-    def overlaps(self, claim):
-        return (self.x + self.width > claim.x and claim.x + claim.width > self.x and
-                self.y + self.height > claim.y and claim.y + claim.height > self.y)
-
 def read_claims(input_file):
     """
     Read input file and return an array of Claim objects containing position and size
