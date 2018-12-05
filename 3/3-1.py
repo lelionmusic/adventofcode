@@ -12,10 +12,7 @@ class Claim:
         return (self.x + self.width > claim.x and claim.x + claim.width > self.x and
                 self.y + self.height > claim.y and claim.y + claim.height > self.y)
 
-# overlapping1D(box1,box2) = xmax1 >= xmin2 and xmax2 >= xmin1
-
-
-def make_claims(input_file):
+def read_claims(input_file):
     """
     Read input file and return an array of Claim objects containing position and size
     """
@@ -31,7 +28,7 @@ def make_claims(input_file):
             claims.append(Claim((x, y), (width, height)))
     return claims
 
-claims = make_claims("input.txt")
+claims = read_claims("input.txt")
 grid = np.zeros((1100,1100))
 for claim in claims:
     grid[claim.x:claim.x+claim.width, claim.y:claim.y+claim.height] += 1
