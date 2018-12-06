@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import numpy as np
 
 def read_timestamps(input_file):
     """
@@ -15,9 +16,14 @@ class Guard:
     def __init__(self, id):
         self.id = id
         self.total_sleep = 0
+        self.minutes = np.zeros(60)
 
-    def sleep(self, minutes):
-        self.total_sleep += minutes
+    def sleep(self, start, end):
+        self.total_sleep += (end - start)
+        self.minutes[start:end] += 1
+        
+    def get_most_slept_minute(self):
+        return np.argmax(self.minutes)
 
 if __name__ == "__main__":
     timestamps = read_timestamps("input.txt")
@@ -32,18 +38,14 @@ if __name__ == "__main__":
 
         if event.startswith("Guard"):
             current_ID = entry.split('#')[1].split(' ')[0]
-            print("Guard with ID", current_ID, "starts his shift.")
             if current_ID not in guards:
                 guards[current_ID] = Guard(current_ID)
-                print("Added new guard to list.")
 
         elif event.startswith("falls asleep"):
             sleep_start = time[3:]
-            print("Guard with ID", current_ID, "falls asleep.")
 
         elif event.startswith("wakes up"):
-            guards.get(current_ID).sleep(int(time[3:]) - int(sleep_start))
-            print("Guard with ID", current_ID, "wakes up.")
+            guards.get(current_ID).sleep(int(sleep_start), int(time[3:]))
             sleep_start = None
 
     # Find ID of sleepmaster
@@ -54,7 +56,10 @@ if __name__ == "__main__":
             longest_sleeptime = guards[key].total_sleep
             sleepmaster_ID = guards[key].id
 
-        # print("ID:", guards[key].id, "Sleep:", guards[key].total_sleep)
+    most_frequent_minute = guards[sleepmaster_ID].get_most_slept_minute()
 
     print("Guard with ID", sleepmaster_ID, "slept the longest, at",
           longest_sleeptime, "minutes.")
+    print("He slept most often on minute", most_frequent_minute)
+    print("Multiplying these, we have", int(sleepmaster_ID) * most_frequent_minute,
+          "which is our puzzle answer.")
