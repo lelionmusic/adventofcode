@@ -1,38 +1,34 @@
 import sys
+from collections import defaultdict
 
 image = open("input/input8.txt").read().strip()
 WIDTH = 25
 HEIGHT = 6
-num_layers = len(image) // (WIDTH * HEIGHT)
-layers = []
-offset = 0
-for i in range(num_layers):
-    layers.append(image[offset:offset + WIDTH * HEIGHT])
-    offset += WIDTH * HEIGHT
+layer_length = WIDTH * HEIGHT
 
-counts = [0] * num_layers
-for i, layer in enumerate(layers):
-    count = 0
+
+def count_pixels(layer) -> dict:
+    """ '112220' -> {'1': 2, '2': 3, '0': 1} """
+    counts = defaultdict(int)
     for pixel in layer:
-        if pixel == '0':
-            count += 1
-    counts[i] = count
+        counts[pixel] += 1
+    return counts
 
-def find_min(counts):
-    min = sys.maxsize
-    min_layer = None
-    for i, count in enumerate(counts):
-        if count < min:
-            min = count
-            min_layer = i
+
+def find_min(counts: list, val):
+    """ Return the dict in counts which contains the leasts val values """
+    min = counts[0][val]
+    min_layer = counts[0]
+    for count in counts:
+        if count[val] < min:
+            min = count[val]
+            min_layer = count
     return min_layer
 
-def count(layer, digit):
-    count = 0
-    for pixel in layer:
-        if pixel == digit:
-            count += 1
-    return count
 
-min_zero_layer = find_min(counts)
-print("Part 1:", count(layers[min_zero_layer], '1') * count(layers[min_zero_layer], '2'))
+# Split image-data evenly into substrings
+layers = [image[i : i + layer_length :] for i in range(0, len(image), layer_length)]
+counts = [count_pixels(layer) for layer in layers]
+
+least_zeroes_layer = find_min(counts, "0")
+print("Part 1:", least_zeroes_layer["1"] * least_zeroes_layer["2"])
