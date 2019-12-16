@@ -1,4 +1,4 @@
-from day7 import *
+from intcode import *
 
 data = [int(x) for x in open("input/input9.txt").read().split(",")]
 computer = IntcodeComputer(data)
