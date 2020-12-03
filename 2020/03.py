@@ -1,3 +1,4 @@
+from functools import reduce
 terrain = [line.strip() for line in open("03-input.txt").readlines()]
 
 PATTERN_WIDTH = len(terrain[0])
@@ -16,9 +17,5 @@ print("Part 1")
 print(check_slope(3, 1))
 
 print("Part 2")
-part_2_answer = check_slope(1, 1) * \
-                check_slope(3, 1) * \
-                check_slope(5, 1) * \
-                check_slope(7, 1) * \
-                check_slope(1, 2)
+part_2_answer = reduce((lambda x, y: x * y), [check_slope(el[0], el[1]) for el in [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]])
 print(part_2_answer)
