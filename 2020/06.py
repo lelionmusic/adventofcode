@@ -1,12 +1,10 @@
-with open("06-input.txt") as input:
-    groups = input.read().split("\n\n")
-    # Part 1
-    group_lengths = [len(set(group.replace("\n", ""))) for group in groups]
-    print("Part 1:", sum(group_lengths))
+def sum_group_part1(group):
+    print(group)
+    return len(set(''.join(group)))
+def sum_group_part2(group): 
+    return len(set.intersection(*map(set, group)))
 
-    # Part 2
-    total_sum = 0
-    for group in groups:
-        persons = [set(person) for person in group.split("\n")]
-        total_sum += len(set.intersection(*persons))
-    print("Part 2:", total_sum)
+with open("06-exampleinput.txt") as input:
+    groups = [persons.split("\n") for persons in input.read().split("\n\n")]
+    print("Part 1:", sum(map(sum_group_part1, groups)))
+    print("Part 2:", sum(map(sum_group_part2, groups)))
